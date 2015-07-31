@@ -10,18 +10,26 @@
 (if (unix:getenv "OLD_HRPSYS")
     (progn ;; 旧システム用
       (warning-message 1 "!!!!!!!!!!using old hrpsys!!!!!!!!!!!~%")
-      (load "euslib/demo/k-kojima/dynamic_control/hrpsys-old-log-parser.l")
-      (when (not (boundp '*gnuplot*))
-        (setq *gnuplot* (gnuplot) *gplot* *gnuplot* *gp* *gnuplot*)
-        (send *gnuplot* :command "set grid")(send *gnuplot* :command "set size 1,1"))
+      (load "hrpsys-old-log-parser.l")
+      ;; (when (not (boundp '*gnuplot*))
+      ;;   (setq *gnuplot* (gnuplot) *gplot* *gnuplot* *gp* *gnuplot*)
+      ;;   (send *gnuplot* :command "set grid")(send *gnuplot* :command "set size 1,1"))
       )
   (progn ;; 新システム用
-    (load "euslib/demo/k-kojima/dynamic_control/hrpsys-base-log-parser.l")
-    (when (not (boundp '*gp*))
-      (setq *gp* (gnuplot)) (send *gp* :command "set grid") )
+    (load "hrpsys-base-log-parser.l")
+    ;; (when (not (boundp '*gp*))
+    ;;   (setq *gp* (gnuplot)) (send *gp* :command "set grid") )
     )
   )
 
+(load "euslib/jsk/gnuplotlib.l")
+(cond
+ ( (boundp '*gnuplot*) (setq *gp* *gnuplot*) )
+ ( (boundp '*gp*) (setq *gnuplot** *gp*) )
+ ( t
+   (setq *gnuplot* (gnuplot) *gplot* *gnuplot* *gp* *gnuplot*)
+   (send *gnuplot* :command "set grid")(send *gnuplot* :command "set size 1,1") )
+ )
 
 (defun save-log (&key (fname nil) (add-fname nil) (type :new) (param-list nil) (parse-flg nil))
   ;; デフォルトログファイル名

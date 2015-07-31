@@ -18,17 +18,26 @@
   (let ( (robot-name (unix:getenv "ROBOT")) );; new hrpsys
     (cond
      ( (equal robot-name "HRP2JSK")
-       (require :hrp2jsk-interface    "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsk-interface.l")    (hrp2jsk-init)    (setq *robot* *hrp2jsk*)    )
+       (warning-message 3 "loading robot interface file...~%")
+       (require :hrp2jsk-interface    "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsk-interface.l")
+       (warning-message 3 "initializing robot interface...~%")
+       (hrp2jsk-init)    (setq *robot* *hrp2jsk*)    )
      ( (equal robot-name "HRP2JSKNT")
-       (require :hrp2jsknt-interface  "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsknt-interface.l")  (hrp2jsknt-init)  (setq *robot* *hrp2jsknt*)  )
+       (warning-message 3 "loading robot interface file...~%")
+       (require :hrp2jsknt-interface  "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsknt-interface.l")
+       (warning-message 3 "initializing robot interface...~%")
+       (hrp2jsknt-init)  (setq *robot* *hrp2jsknt*)  )
      ( (equal robot-name "HRP2JSKNTS")
-       (require :hrp2jsknts-interface "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsknts-interface.l") (hrp2jsknts-init) (setq *robot* *hrp2jsknts*) )
+       (warning-message 3 "loading robot interface file...~%")
+       (require :hrp2jsknts-interface "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsknts-interface.l")
+       (warning-message 3 "initializing robot interface...~%")
+       (hrp2jsknts-init) (setq *robot* *hrp2jsknts*) )
      )
     )
   (when (not (boundp '*hrp2*)) (setup-model-for-hrp2) (setq *robot* *hrp2*)  );; old hrpsys
   )
 
-(load "euslib/jsk/gnuplotlib.l")
+;; (load "euslib/jsk/gnuplotlib.l")
 
 (unless (boundp '*usage-funcs*) (setq *usage-funcs* nil))
 (push-back #'(lambda () (warn "~%play-hrpsysfile.l~%")) *usage-funcs*)
@@ -43,7 +52,7 @@
 (push-back #'(lambda () (warning-message 3 "(set-dgain <l-crotch dgain>)~%")) *usage-funcs*)
 (push-back #'(lambda () (warn "~%")) *usage-funcs*)
 
-(load "euslib/demo/k-kojima/dynamic_control/log-tools.l")
+(load "log-tools.l")
 
 (defun usage()
   (warn "[[usage]]")
@@ -52,9 +61,9 @@
 
 ;; (if (not (boundp '*ci*)) (setup-real-for-hrp2))
 
-(when (not (boundp '*gnuplot*))
-  (if (boundp '*gplot*) (setq *gnuplot* *gplot*)  (setq *gnuplot* (gnuplot)))
-  (send *gnuplot* :command "set size 1.5,1")(send *gnuplot* :command "set size 1,1"))
+;; (when (not (boundp '*gnuplot*))
+;;   (if (boundp '*gplot*) (setq *gnuplot* *gplot*)  (setq *gnuplot* (gnuplot)))
+;;   (send *gnuplot* :command "set size 1.5,1")(send *gnuplot* :command "set size 1,1"))
 
 ;; 実機かシミュレーションか判定
 (defun check-sim ()

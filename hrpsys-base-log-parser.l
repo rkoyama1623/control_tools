@@ -26,9 +26,10 @@
 (unless (assoc :samplerobot-interface *modules*) (nconc *modules* (list (list* :samplerobot-interface nil))))
 
 ;; for log-parse
-(load "package://hrpsys_ros_bridge/euslisp/datalogger-log-parser.l")
-(load "euslib/irteus_proposals/motion-lib-proposal.l")
-(load "euslib/demo/nozawa/hrpsys-test/test-st-state-estimate-data.l")
+;; (require "package://hrpsys_ros_bridge/euslisp/datalogger-log-parser.l")
+;; (require "euslib/irteus_proposals/motion-lib-proposal.l")
+(warning-message 3 "loading test-st-state-estimate-data.l...~%")
+(require "euslib/demo/nozawa/hrpsys-test/test-st-state-estimate-data.l")
 
 (warning-message 1 "Execute in log dir!!~%")
 (warning-message 1 "Or log file name has to correspond to log directory name!!~%")
