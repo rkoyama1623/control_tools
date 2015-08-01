@@ -1,11 +1,14 @@
 (unless (boundp '*usage-funcs*) (setq *usage-funcs* nil))
-(push-back #'(lambda () (warn "~%log-tools.l~%")) *usage-funcs*)
-(push-back #'(lambda () (warning-message 3 "(make-list-from-input :fname <motion-name>  :span <time-span> )~%")) *usage-funcs*)
-(push-back #'(lambda () (warning-message 3 "(make-list-and-file-from-log :start <start-index> :span <time-span>)~%")) *usage-funcs*)
-(push-back #'(lambda () (warning-message 3 "(save-list '(<list-name1> <list-name2>) :make-script t :type <log-type> :multi-plot nil)~%")) *usage-funcs*)
-(push-back #'(lambda () (warning-message 3 "joint velocity and torque list name: joint-vel-tq-list~%")) *usage-funcs*)
-(push-back #'(lambda () (warning-message 3 "(save-log :fname <file-name> :add-fname <file-name-option> :type <:new or :old>)~%")) *usage-funcs*)
-(push-back #'(lambda () (warn "~%")) *usage-funcs*)
+(unless (assoc :log-tools *usage-funcs*)
+  (push (cons :log-tools
+              #'(lambda ()
+                  (warn "~%log-tools.l~%")
+                  (warning-message 3 "(make-list-from-input :fname <motion-name>  :span <time-span> )~%")
+                  (warning-message 3 "(make-list-and-file-from-log :start <start-index> :span <time-span>)~%")
+                  (warning-message 3 "(save-list '(<list-name1> <list-name2>) :make-script t :type <log-type> :multi-plot nil)~%")
+                  (warning-message 3 "joint velocity and torque list name: joint-vel-tq-list~%")
+                  (warning-message 3 "(save-log :fname <file-name> :add-fname <file-name-option> :type <:new or :old>)~%")
+                  (warn "~%"))) *usage-funcs*))
 
 (if (unix:getenv "OLD_HRPSYS")
     (progn ;; 旧システム用
