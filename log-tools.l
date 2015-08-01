@@ -84,7 +84,7 @@
 
     ;; 日付追加
     (setq raw-date (unix:localtime))
-    (setq date (reg-replace* " " "0" (format nil "20~2d_~2d_~2d_~2d_~2d_~2d" (- (elt raw-date 5) 100) (+ (elt raw-date 4) 1) (elt raw-date 3) (elt raw-date 2) (elt raw-date 1) (elt raw-date 0)  )) )
+    (setq date (reg-replace* " " "0" (format nil "20~2d_~2d-~2d_~2d-~2d_~2d" (- (elt raw-date 5) 100) (+ (elt raw-date 4) 1) (elt raw-date 3) (elt raw-date 2) (elt raw-date 1) (elt raw-date 0)  )) )
 
     (setq fname (format nil "~a_~a" fname date))
     (send *ri* :save-log (format nil "/tmp/~a" fname) :set-robot-date-string nil)
