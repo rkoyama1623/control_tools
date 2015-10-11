@@ -21,10 +21,9 @@
     ;;;
     ;;; Main Loop
     ;;;
-    (do-until-key
-     (let ()
+    (let ( (prev-time (car (unix:ptimes))) )
+      (do-until-key
        (when (send *model* :copy-state-from-tf *tl* :max-user-index max-user-index) ;; copy kinect human tracker information to human body
-         ;;
          ;; track human body
          ;;
          ;; (format t "kinect robot : larm pos=~A, rarm pos=~A (world)~%" ;; display arm tool coordinates in world coordinates
