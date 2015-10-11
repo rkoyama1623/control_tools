@@ -7,8 +7,9 @@
 #-:ros
 (unless (find-package "ROS") (make-package "ROS"))
 #+:ros
-(defun play-motion (&key robot fname loop-hook (max-user-index 5) (time-span 0.5) (real nil)) ;; :fname "test-kinect.bvh", loop-hook is a function to call inside do-until-key loop
+(defun play-motion (&key robot fname loop-hook (max-user-index 5) (time-span 0.5) (real nil) (bag nil)) ;; :fname "test-kinect.bvh", loop-hook is a function to call inside do-until-key loop
   (let ((floor (make-cube 2000 1000 10 :pos #f(1000 0 0))) f)
+    (if bag (rosbag-play))
     (if fname (setq f (open fname :direction :output)))
     (ros::roseus "kinect_bvh")
     (if (not (boundp '*tl*))
