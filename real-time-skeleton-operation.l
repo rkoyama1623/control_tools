@@ -7,7 +7,7 @@
 #-:ros
 (unless (find-package "ROS") (make-package "ROS"))
 #+:ros
-(defun test-kinect (&key robot fname loop-hook (max-user-index 5)) ;; :fname "test-kinect.bvh", loop-hook is a function to call inside do-until-key loop
+(defun play-motion (&key robot fname loop-hook (max-user-index 5) (time-span 0.5) (real nil)) ;; :fname "test-kinect.bvh", loop-hook is a function to call inside do-until-key loop
   (let ((floor (make-cube 2000 1000 10 :pos #f(1000 0 0))) f)
     (if fname (setq f (open fname :direction :output)))
     (ros::roseus "kinect_bvh")
@@ -33,12 +33,22 @@
          ;; (format t "             : larm pos=~A, rarm pos=~A (local)~%" ;; display arm tool cooridnates with reference to human torso coordinates
          ;;         (send (send (send *model* :torso :end-coords) :transformation (send *model* :larm :end-coords)) :worldpos)
          ;;         (send (send (send *model* :torso :end-coords) :transformation (send *model* :rarm :end-coords)) :worldpos))
+         (when robot
+           ;; (send *model* :copy-state-to robot)
+           (let ( (cur-time (car (unix:ptimes))) )
+             (when (> (- cur-time prev-time) (* 100 time-span))
+               (setq prev-time cur-time)
+               (send *model* :copy-state-to robot)
+               (when real (send *ri* :angle-vector (send robot :angle-vector) time-span))
+               )
+             )
+           );; robot
+
          )
-       (when robot
-         (send *model* :copy-state-to robot))
        (if (functionp loop-hook) (funcall loop-hook))
        (send (get *viewer* :pickviewer) :look-all)
        (x::window-main-one)
        (if f (send *model* :dump-motion f))
-       )) ;; do-until-key
+       ) ;; do-until-key
+      )
     ))
