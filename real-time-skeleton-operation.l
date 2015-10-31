@@ -3,7 +3,7 @@
 (load "~/ros/indigo_parent/src/jskeus/irteus/irtrobot.l")
 
 ;; (defun rosbag-play () (unix:system "sh -c 'rosbag play ~/k-kojima@jsk.imi.i.u-tokyo.ac.jp/Documents/log/human/test/only-tf_2015-10-11-13-06-43.bag'&"))
-(defun rosbag-play () (unix:system "sh -c 'rosbag play ~/k-kojima@jsk.imi.i.u-tokyo.ac.jp/Documents/log/human/test/kinect2_2015-10-31-22-58-23.bag --clock'&"))
+(defun rosbag-play () (unix:system "sh -c 'rosparam set use_sim_time true; rosbag play ~/k-kojima@jsk.imi.i.u-tokyo.ac.jp/Documents/log/human/test/kinect2_2015-10-31-22-58-23.bag --clock'&"))
 
 #-:ros
 (unless (find-package "ROS") (make-package "ROS"))
