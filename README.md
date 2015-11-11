@@ -5,7 +5,6 @@
 ```
 roseus "(jsk)" "(rbrain)"
 load "play-hrpsysfile.l" ;;this repository file
-load "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsknt-interface.l"
 ```  
 
 
