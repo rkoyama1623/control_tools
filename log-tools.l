@@ -25,7 +25,7 @@
     )
   )
 
-(load "euslib/jsk/gnuplotlib.l")
+(load (format nil "~a/ros/~a/src/jsk-ros-pkg/euslib/jsk/gnuplotlib.l" (unix:getenv "HOME") (unix:getenv "ROS_DISTRO")))
 (cond
  ( (boundp '*gnuplot*) (setq *gp* *gnuplot*) )
  ( (boundp '*gp*) (setq *gnuplot** *gp*) )
