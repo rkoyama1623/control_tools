@@ -1,15 +1,3 @@
-(unless (boundp '*usage-funcs*) (setq *usage-funcs* nil))
-(unless (assoc :log-tools *usage-funcs*)
-  (push (cons :log-tools
-              #'(lambda ()
-                  (warn "~%log-tools.l~%")
-                  (warning-message 3 "(make-list-from-input :fname <motion-name>  :span <time-span> )~%")
-                  (warning-message 3 "(make-list-and-file-from-log :start <start-index> :span <time-span>)~%")
-                  (warning-message 3 "(save-list '(<list-name1> <list-name2>) :make-script t :type <log-type> :multi-plot nil)~%")
-                  (warning-message 3 "joint velocity and torque list name: joint-vel-tq-list~%")
-                  (warning-message 3 "(save-log :fname <file-name> :add-fname <file-name-option> :type <:new or :old>)~%")
-                  (warn "~%"))) *usage-funcs*))
-
 (if (unix:getenv "OLD_HRPSYS")
     (progn ;; 旧システム用
       (warning-message 1 "!!!!!!!!!!using old hrpsys!!!!!!!!!!!~%")
@@ -26,6 +14,19 @@
   )
 
 (load (format nil "~a/ros/~a/src/jsk-ros-pkg/euslib/jsk/gnuplotlib.l" (unix:getenv "HOME") (unix:getenv "ROS_DISTRO")))
+
+(defvar *usage-funcs* nil)
+(unless (assoc :log-tools *usage-funcs*)
+  (push (cons :log-tools
+              #'(lambda ()
+                  (warn "~%log-tools.l~%")
+                  (warning-message 3 "(save-log :fname <file-name> :add-fname <file-name-option> :type <:new or :old>)~%")
+                  (warning-message 3 "(make-list-from-input :fname <motion-name>  :span <time-span> )~%")
+                  (warning-message 3 "(make-list-and-file-from-log :start <start-index> :span <time-span>)~%")
+                  (warning-message 3 "(save-list '(<list-name1> <list-name2>) :make-script t :type <log-type> :multi-plot nil)~%")
+                  (warning-message 3 "joint velocity and torque list name: joint-vel-tq-list~%")
+                  (warn "~%"))) *usage-funcs*))
+
 (cond
  ( (boundp '*gnuplot*) (setq *gp* *gnuplot*) )
  ( (boundp '*gp*) (setq *gnuplot** *gp*) )

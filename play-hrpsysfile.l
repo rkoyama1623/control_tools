@@ -38,8 +38,9 @@
   )
 
 ;; (load "euslib/jsk/gnuplotlib.l")
+(load "log-tools.l")
 
-(unless (boundp '*usage-funcs*) (setq *usage-funcs* nil))
+(defvar *usage-funcs* nil)
 (unless (assoc :play-hrpsysfile *usage-funcs*)
   (push (cons :play-hrpsysfile
               #'(lambda ()
@@ -55,11 +56,9 @@
                   (warning-message 3 "(set-dgain <l-crotch dgain>)~%")
                   (warn "~%"))) *usage-funcs*))
 
-(load "log-tools.l")
-
 (defun usage()
-  (warn "[[usage]]")
-  (mapc #'(lambda (func) (funcall func)) *usage-funcs*))
+  (warn "[[usage]]~%")
+  (mapc #'(lambda (func-cons) (funcall (cdr func-cons))) *usage-funcs*))
 (usage)
 
 ;; (if (not (boundp '*ci*)) (setup-real-for-hrp2))

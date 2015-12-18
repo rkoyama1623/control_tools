@@ -35,16 +35,17 @@
 (warning-message 3 "loading test-st-state-estimate-data.l...~%")
 (require (format nil "~a/ros/~a/src/jsk-ros-pkg/euslib/demo/nozawa/hrpsys-test/test-st-state-estimate-data.l" (unix:getenv "HOME") (unix:getenv "ROS_DISTRO")))
 
-(unless (boundp '*usage-funcs*) (setq *usage-funcs* nil))
+(defvar *usage-funcs* nil)
 (unless (assoc :hrpsys-base-log-parser *usage-funcs*)
   (push (cons :hrpsys-base-log-parser
               #'(lambda ()
+                  (warn "~%hrpsys-base-log-parser.l~%")
                   (warning-message 1 "Execute in log dir!!~%")
                   (warning-message 1 "Or log file name has to correspond to log directory name!!~%")
-                  (warning-message 3 "usage~%")
-                  (warning-message 3 " (prepare-plot :robot hrp2jsknts-robot)~%")
-                  (warning-message 3 " (plot-rs :mode :ee-pos :axis 2 :proc-mode :press-enter :yrange (list 0 0.1) :robot hrp2jsknts-robot :save t :create t)~%")
-                  (warning-message 3 " (plot-imu :fname \"HRP2JSKNTS/go-vel-test_hoge\" :axis 1 :start-tm 7 :stop-tm 8 :robot hrp2jsknts-robot :save t :create t :correct-offset t)~%"))) *usage-funcs*))
+                  (warning-message 3 "(prepare-plot :robot hrp2jsknts-robot)~%")
+                  (warning-message 3 "(plot-rs :mode :ee-pos :axis 2 :proc-mode :press-enter :yrange (list 0 0.1) :robot hrp2jsknts-robot :save t :create t)~%")
+                  (warning-message 3 "(plot-imu :fname \"HRP2JSKNTS/go-vel-test_hoge\" :axis 1 :start-tm 7 :stop-tm 8 :robot hrp2jsknts-robot :save t :create t :correct-offset t)~%")
+                  (warn "~%"))) *usage-funcs*))
 
 (defun create-log-interface (fname-with-path &key (robot))
   (instance datalogger-log-parser-controller :init fname-with-path :robot robot) )
