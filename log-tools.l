@@ -84,45 +84,48 @@
 
 ;; 新システム
 (defun save-log-new (fname parse-flg)
-  (let ( machine-name raw-date date path sim-flg fstream uname)
+  (let ( machine-name raw-date date path sim-flg fstream uname (org-fname "test") )
 
     ;; 日付追加
     (setq raw-date (unix:localtime))
     (setq date (reg-replace* " " "0" (format nil "20~2d_~2d-~2d_~2d-~2d_~2d" (- (elt raw-date 5) 100) (+ (elt raw-date 4) 1) (elt raw-date 3) (elt raw-date 2) (elt raw-date 1) (elt raw-date 0)  )) )
 
-    (setq fname (format nil "~a_~a" fname date))
-    (send *ri* :save-log (format nil "/tmp/~a" fname) :set-robot-date-string nil)
+    (setq org-fname (format nil "~a_~a" org-fname date))
+    (send *ri* :save-log (format nil "/tmp/~a" org-fname) :set-robot-date-string nil)
 
+
+    (setq fname (format nil "~a_~a_~a" fname (send *robot* :name) date))
 
     (setq sim-flg (ros::get-param "use_sim_time" nil));; シミュレーションフラグ
     
-    ;; コピー元設定
+		;; コピー先設定
+    (setq path (format nil "/home/~a/k-kojima@jsk.imi.i.u-tokyo.ac.jp/Documents/log/~a/~a"
+                       (unix:getenv "USER") (send *robot* :name) fname) )
+    (unix:system (format nil "mkdir -p ~a" path))
+
+    ;; コピー
     (cond
      ( sim-flg 
-       (setq uname (unix:getenv "USER"))
-       (with-open-file (fstream "/etc/hostname" :direction :input)
-                       (let ( (eof (gensym)) ) (setq machine-name (read-line fstream nil eof)) )) )
+       ;; (setq uname (unix:getenv "USER")
+			 ;; 			 cp-command "cp"
+			 ;; 			 machine-name (unix:system "uname -n"))
+       ;; (with-open-file (fstream "/etc/hostname" :direction :input)
+       ;;                 (let ( (eof (gensym)) ) (setq machine-name (read-line fstream nil eof)) ))
+			 (unix:system (concatenate string "cp /tmp/" org-fname "* " path))
+			 )
      ( t
-       (setq uname "grxuser")
+       (setq uname "grxuser" cp-command "scp")
        (cond
         ( (equal (send *robot* :name) "HRP2JSK")    (setq machine-name "hrp2007c") )
         ( (equal (send *robot* :name) "HRP2JSKNT")  (setq machine-name "hrp2016c") )
         ( (equal (send *robot* :name) "HRP2JSKNTS") (setq machine-name "hrp2017c") )
         ( t (warning-message 1 "cannot use save-log in this robot~%") )
-        ) )
+        )
+			 (unix:system (concatenate string "scp " uname "@" machine-name ":/tmp/" org-fname "* " path))
+			 )
      )
 
 
-    (setq path (format nil "/home/~a/Copy/Documents/log/~a/~a"
-                       (unix:getenv "USER") (send *robot* :name) fname) )
-    (unix:system (format nil "mkdir -p ~a" path))
-
-    (unix:system (concatenate string "scp " uname "@" machine-name ":/tmp/" fname "* " path))
-
-    ;; (mapc #'(lambda (filename) 
-    ;;           (if (not (or (equal filename ".") (equal filename "..")))
-    ;;               (unix:system (concatenate string "mv " path filename " " path (reg-replace*  (concatenate string "_" (send *robot* :name)  "_.*\\.") "." filename )))) )
-    ;;       (directory path));; ログファイル名からロボット名と自動追加される日付を削除
     ;; (sys:thread-no-wait #'plot-rs :fname fname :mode :force :save t :create t)
     (if parse-flg (sys:thread-no-wait #'prepare-plot :fname fname :create t))
     ;; (sys:thread-no-wait #'plot-mu :fname fname :save t)
