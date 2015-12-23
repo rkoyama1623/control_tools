@@ -93,11 +93,11 @@
     (setq org-fname (format nil "~a_~a" org-fname date))
     (send *ri* :save-log (format nil "/tmp/~a" org-fname) :set-robot-date-string nil)
 
-
-    (setq fname (format nil "~a_~a_~a" fname (send *robot* :name) date))
-
     (setq sim-flg (ros::get-param "use_sim_time" nil));; シミュレーションフラグ
     
+    (setq fname (read (piped-fork "zenity --entry --title \"ファイル名\" --text=\"ログファイルの保存名\" --entry-text=\"test\"")))
+    (setq fname (format nil "~a_~a_~a" fname (send *robot* :name) date))
+
 		;; コピー先設定
     (setq path (format nil "/home/~a/k-kojima@jsk.imi.i.u-tokyo.ac.jp/Documents/log/~a/~a"
                        (unix:getenv "USER") (send *robot* :name) fname) )
@@ -124,7 +124,6 @@
 			 (unix:system (concatenate string "scp " uname "@" machine-name ":/tmp/" org-fname "* " path))
 			 )
      )
-
 
     ;; (sys:thread-no-wait #'plot-rs :fname fname :mode :force :save t :create t)
     (if parse-flg (sys:thread-no-wait #'prepare-plot :fname fname :create t))
