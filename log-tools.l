@@ -95,7 +95,7 @@
 
     (setq sim-flg (ros::get-param "use_sim_time" nil));; シミュレーションフラグ
     
-    (setq fname (read (piped-fork "zenity --entry --title \"ファイル名\" --text=\"ログファイルの保存名\" --entry-text=\"test\"")))
+    (setq fname (read (piped-fork (format nil "zenity --entry --title \"ファイル名\" --text=\"ログファイルの保存名\" --entry-text=\"~s\"" fname))))
     (setq fname (format nil "~a_~a_~a" fname (send *robot* :name) date))
 
 		;; コピー先設定
@@ -124,6 +124,7 @@
 			 (unix:system (concatenate string "scp " uname "@" machine-name ":/tmp/" org-fname "* " path))
 			 )
      )
+    (unix:system (concatenate string "find " path "| rename 's/" org-fname "/" fname "/'"))
 
     ;; (sys:thread-no-wait #'plot-rs :fname fname :mode :force :save t :create t)
     (if parse-flg (sys:thread-no-wait #'prepare-plot :fname fname :create t))
