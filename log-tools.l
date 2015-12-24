@@ -40,7 +40,10 @@
 
 (defun save-log (&key (fname nil) (add-fname nil) (type :new) (param-list nil) (parse-flg nil))
   ;; デフォルトログファイル名
-  (if (not fname) (setq fname *__fname__*))
+  (if (not fname)
+      (if (boundp '*__fname__*)
+          (setq fname *__fname__*)
+        (setq fname "test")))
   (if (and add-fname (not (equal add-fname ""))) (setq fname (format nil "~a_~a" fname add-fname)))
 
   ;; param-listをファイル名に反映
