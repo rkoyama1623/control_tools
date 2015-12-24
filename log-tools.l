@@ -26,6 +26,9 @@
                   (warning-message 3 "(save-list '(<list-name1> <list-name2>) :make-script t :type <log-type> :multi-plot nil)~%")
                   (warning-message 3 "joint velocity and torque list name: joint-vel-tq-list~%")
                   (warn "~%"))) *usage-funcs*))
+(defun usage()
+  (warn "[[usage]]~%")
+  (mapc #'(lambda (func-cons) (funcall (cdr func-cons))) *usage-funcs*))
 
 (cond
  ( (boundp '*gnuplot*) (setq *gp* *gnuplot*) )
