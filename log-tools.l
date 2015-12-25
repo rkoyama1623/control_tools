@@ -38,7 +38,7 @@
    (send *gnuplot* :command "set grid")(send *gnuplot* :command "set size 1,1") )
  )
 
-(defun save-log (&key (fname nil) (add-fname nil) (type :new) (param-list nil) (parse-flg nil))
+(defun save-log (&key (fname nil) (add-fname nil) (type :new) (param-list nil) (parse-flg nil) (log-dir "k-kojima@jsk.imi.i.u-tokyo.ac.jp/Documents/log"))
   ;; デフォルトログファイル名
   (if (not fname)
       (if (boundp '*__fname__*)
@@ -53,7 +53,7 @@
 
   (cond
    ( (equal type :old) (save-log-old fname) )
-   ( (equal type :new) (setq fname (save-log-new fname parse-flg)) )
+   ( (equal type :new) (setq fname (save-log-new fname parse-flg log-dir)) )
    )
   fname
   )
@@ -89,7 +89,7 @@
     (send *ci* :start-log) ))
 
 ;; 新システム
-(defun save-log-new (fname parse-flg)
+(defun save-log-new (fname parse-flg log-dir)
   (let ( machine-name raw-date date path sim-flg fstream uname (org-fname "test") )
 
     ;; 日付追加
@@ -105,8 +105,8 @@
     (setq fname (format nil "~a_~a_~a" fname (send *robot* :name) date))
 
 		;; コピー先設定
-    (setq path (format nil "/home/~a/k-kojima@jsk.imi.i.u-tokyo.ac.jp/Documents/log/~a/~a"
-                       (unix:getenv "USER") (send *robot* :name) fname) )
+    (setq path (format nil "/home/~a/~a/~a/~a"
+                       (unix:getenv "USER") log-dir (send *robot* :name) fname) )
     (unix:system (format nil "mkdir -p ~a" path))
 
     ;; コピー
