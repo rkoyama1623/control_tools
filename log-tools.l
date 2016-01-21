@@ -26,6 +26,9 @@
                   (warning-message 3 "(save-list '(<list-name1> <list-name2>) :make-script t :type <log-type> :multi-plot nil)~%")
                   (warning-message 3 "joint velocity and torque list name: joint-vel-tq-list~%")
                   (warn "~%"))) *usage-funcs*))
+(defun usage()
+  (warn "[[usage]]~%")
+  (mapc #'(lambda (func-cons) (funcall (cdr func-cons))) *usage-funcs*))
 
 (cond
  ( (boundp '*gnuplot*) (setq *gp* *gnuplot*) )
@@ -35,9 +38,12 @@
    (send *gnuplot* :command "set grid")(send *gnuplot* :command "set size 1,1") )
  )
 
-(defun save-log (&key (fname nil) (add-fname nil) (type :new) (param-list nil) (parse-flg nil))
+(defun save-log (&key (fname nil) (add-fname nil) (type :new) (param-list nil) (parse-flg nil) (log-dir "k-kojima@jsk.imi.i.u-tokyo.ac.jp/Documents/log"))
   ;; デフォルトログファイル名
-  (if (not fname) (setq fname *__fname__*))
+  (if (not fname)
+      (if (boundp '*__fname__*)
+          (setq fname *__fname__*)
+        (setq fname "test")))
   (if (and add-fname (not (equal add-fname ""))) (setq fname (format nil "~a_~a" fname add-fname)))
 
   ;; param-listをファイル名に反映
@@ -47,7 +53,7 @@
 
   (cond
    ( (equal type :old) (save-log-old fname) )
-   ( (equal type :new) (setq fname (save-log-new fname parse-flg)) )
+   ( (equal type :new) (setq fname (save-log-new fname parse-flg log-dir)) )
    )
   fname
   )
@@ -83,7 +89,7 @@
     (send *ci* :start-log) ))
 
 ;; 新システム
-(defun save-log-new (fname parse-flg)
+(defun save-log-new (fname parse-flg log-dir)
   (let ( machine-name raw-date date path sim-flg fstream uname (org-fname "test") )
 
     ;; 日付追加
@@ -95,12 +101,12 @@
 
     (setq sim-flg (ros::get-param "use_sim_time" nil));; シミュレーションフラグ
     
-    (setq fname (read (piped-fork "zenity --entry --title \"ファイル名\" --text=\"ログファイルの保存名\" --entry-text=\"test\"")))
+    (setq fname (read (piped-fork (format nil "zenity --entry --title \"ファイル名\" --text=\"ログファイルの保存名\" --entry-text=\"~s\"" fname))))
     (setq fname (format nil "~a_~a_~a" fname (send *robot* :name) date))
 
 		;; コピー先設定
-    (setq path (format nil "/home/~a/k-kojima@jsk.imi.i.u-tokyo.ac.jp/Documents/log/~a/~a"
-                       (unix:getenv "USER") (send *robot* :name) fname) )
+    (setq path (format nil "/home/~a/~a/~a/~a"
+                       (unix:getenv "USER") log-dir (send *robot* :name) fname) )
     (unix:system (format nil "mkdir -p ~a" path))
 
     ;; コピー
@@ -126,6 +132,7 @@
 			 (unix:system (concatenate string "scp " uname "@" machine-name ":/tmp/" org-fname "* " path))
 			 )
      )
+    (unix:system (concatenate string "find " path "| rename 's/" org-fname "/" fname "/'"))
 
     ;; (sys:thread-no-wait #'plot-rs :fname fname :mode :force :save t :create t)
     (if parse-flg (sys:thread-no-wait #'prepare-plot :fname fname :create t))

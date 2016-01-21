@@ -67,9 +67,6 @@
                   (warning-message 3 "(set-dgain <l-crotch dgain>)~%")
                   (warn "~%"))) *usage-funcs*))
 
-(defun usage()
-  (warn "[[usage]]~%")
-  (mapc #'(lambda (func-cons) (funcall (cdr func-cons))) *usage-funcs*))
 (usage)
 
 ;; (if (not (boundp '*ci*)) (setup-real-for-hrp2))
