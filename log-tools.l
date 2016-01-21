@@ -114,11 +114,13 @@
 			 (unix:system (concatenate string "cp /tmp/" org-fname "* " path))
 			 )
      ( t
-       (setq uname "grxuser" cp-command "scp")
+       (setq cp-command "scp")
        (cond
-        ( (equal (send *robot* :name) "HRP2JSK")    (setq machine-name "hrp2007c") )
-        ( (equal (send *robot* :name) "HRP2JSKNT")  (setq machine-name "hrp2016c") )
-        ( (equal (send *robot* :name) "HRP2JSKNTS") (setq machine-name "hrp2017c") )
+        ( (equal (send *robot* :name) "HRP2JSK")    (setq uname "grxuser" machine-name "hrp2007c") )
+        ( (equal (send *robot* :name) "HRP2JSKNT")  (setq uname "grxuser" machine-name "hrp2016c") )
+        ( (equal (send *robot* :name) "HRP2JSKNTS") (setq uname "grxuser" machine-name "hrp2017c") )
+        ( (equal (send *robot* :name) "JAXON")      (setq uname "leus"    machine-name "jaxon")    )
+        ( (equal (send *robot* :name) "JAXON_RED")  (setq uname "leus"    machine-name "jaxonred") )
         ( t (warning-message 1 "cannot use save-log in this robot~%") )
         )
 			 (unix:system (concatenate string "scp " uname "@" machine-name ":/tmp/" org-fname "* " path))
