@@ -43,7 +43,7 @@
 (warning-message 3 "loading test-st-state-estimate-data.l...~%")
 (require (format nil "~a/ros/~a/src/jsk-ros-pkg/euslib/demo/nozawa/hrpsys-test/test-st-state-estimate-data.l" (unix:getenv "HOME") (unix:getenv "ROS_DISTRO")))
 
-(load "string-tools.l")
+(load "euslib-tools.l")
 
 (defvar *usage-funcs* nil)
 (unless (assoc :hrpsys-base-log-parser *usage-funcs*)
