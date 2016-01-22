@@ -1,3 +1,8 @@
+(defmacro push-back (el lst)
+  `(if (null ,lst)
+       (setf ,lst (list ,el))
+     (nconc ,lst (list ,el))))
+
 (defun reg-replace-impl (old-pattern new-pattern str delimiter g)
   (read-line (piped-fork (format nil "echo ~a|sed -e 's~a~a~a~a~a~a'" str delimiter old-pattern delimiter new-pattern delimiter g))))
 
