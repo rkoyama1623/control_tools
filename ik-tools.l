@@ -1,6 +1,6 @@
 (defvar *usage-funcs* nil)
-(unless (assoc :hrpsys-base-log-parser *usage-funcs*)
-  (push (cons :hrpsys-base-log-parser
+(unless (assoc :ik-tools *usage-funcs*)
+  (push (cons :ik-tools
               #'(lambda ()
                   (warn "~%ik-tools.l~%")
                   (warning-message 3 "(set-arguments)~%")
