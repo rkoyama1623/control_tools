@@ -41,6 +41,7 @@
                   (warn "~%hrpsys-base-log-parser.l~%")
                   (warning-message 1 "Execute in log dir!!~%")
                   (warning-message 1 "Or log file name has to correspond to log directory name!!~%")
+                  (warning-message 3 "(create-robot-instance jaxon)~%")
                   (warning-message 3 "(prepare-plot :robot hrp2jsknts-robot)~%")
                   (warning-message 3 "(plot-rs :mode :ee-pos :axis 2 :proc-mode :press-enter :yrange (list 0 0.1) :robot hrp2jsknts-robot :save t :create t)~%")
                   (warning-message 3 "(plot-imu :fname \"HRP2JSKNTS/go-vel-test_hoge\" :axis 1 :start-tm 7 :stop-tm 8 :robot hrp2jsknts-robot :save t :create t :correct-offset t)~%")

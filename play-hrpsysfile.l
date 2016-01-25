@@ -42,7 +42,8 @@
   (push (cons :play-hrpsysfile
               #'(lambda ()
                   (warn "~%play-hrpsysfile.l~%")
-                  (warning-message 3 "(setup-real-for-hrp2)~%")
+                  ;; (warning-message 3 "(setup-real-for-hrp2)~%")
+                  (warning-message 3 "(create-robot-interface jaxon)~%")
                   (warning-message 3 "(scale-hrpsysfile :fname <FILE NAME>)~%")
                   (warning-message 3 "(copy-files :fname <FILE NAME> :real t)~%")
                   (warning-message 3 "(init-pose :fname <FILE NAME> :real t)~%")
