@@ -1,31 +1,20 @@
-(let ( (robot-name (unix:getenv "ROBOT")) )
-  (cond
-   ( (equal robot-name "HRP2JSK"   )
-     (warning-message 3 "loading robot interface file...~%")
-     (require :hrp2jsk-interface "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsk-interface.l")
-     (setq *robot-class* hrp2jsk-robot     *hrp2jsk*     (instance *robot-class* :init) *robot* *hrp2jsk*))
-   ( (equal robot-name "HRP2JSKNT" )
-     (warning-message 3 "loading robot interface file...~%")
-     (require :hrp2jsknt-interface "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsknt-interface.l")
-     (setq *robot-class* hrp2jsknt-robot   *hrp2jsknt*   (instance *robot-class* :init) *robot* *hrp2jsknt*))
-   ( (equal robot-name "HRP2JSKNTS" )
-     (warning-message 3 "loading robot interface file...~%")
-     (require :hrp2jsknts-interface "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsknts-interface.l")
-     (setq *robot-class* hrp2jsknts-robot  *hrp2jsknts*  (instance *robot-class* :init) *robot* *hrp2jsknts*))
-   ( (equal robot-name "JAXON" )
-     (warning-message 3 "loading robot interface file...~%")
-     (require :jaxon-interface "package://hrpsys_ros_bridge_tutorials/euslisp/jaxon-interface.l")
-     (setq *robot-class* jaxon-robot  *jaxon*  (instance *robot-class* :init) *robot* *jaxon*))
-   ( (equal robot-name "JAXON_RED" )
-     (warning-message 3 "loading robot interface file...~%")
-     (require :jaxon_red-interface "package://hrpsys_ros_bridge_tutorials/euslisp/jaxon_red-interface.l")
-     (setq *robot-class* jaxon_red-robot  *jaxon_red*  (instance *robot-class* :init) *robot* *jaxon_red*))
-   ( (equal robot-name "TESTMDOFARM")
-     (warning-message 3 "loading robot interface file...~%")
-     (require :testmdofarm-interface "package://hrpsys_ros_bridge_tutorials/euslisp/testmdofarm-interface.l")
-     (setq *robot-class* testmdofarm-robot *testmdofarm* (instance *robot-class* :init) *robot* *testmdofarm*))
-   ( t (warning-message 1 "!!!!!!!!!!No ROBOT TYPE!!!!!!!!!!~%") )
-   ))
+(defmacro create-robot-instance (&optional (robot nil))
+  (unless robot (setq robot (read-from-string (unix:getenv "ROBOT"))))
+  (warning-message 3 "~%loading robot interface file (~a)...~%" robot)
+  (list
+   'progn
+   (list 'require
+         (read-from-string (format nil ":~a-interface" robot))
+         (read-from-string (format nil "\"package://hrpsys_ros_bridge_tutorials/euslisp/~a-interface.l\"" robot)))
+   (list 'setq
+         (read-from-string (format nil "*~a*" robot)) (list 'instance (read-from-string (format nil "~a-robot" robot)) :init)
+         '*robot* (read-from-string (format nil "*~a*" robot)))
+   )
+  )
+
+(if (equal (unix:getenv "ROBOT") "")
+    (warning-message 1 "!!!!!!!!!!No ROBOT TYPE!!!!!!!!!!~%")
+    (create-robot-instance))
 
 ;; disable needless module loading
 (unless (assoc :hrp2jsk-interface     *modules*) (nconc *modules* (list (list* :hrp2jsk-interface     nil))))
