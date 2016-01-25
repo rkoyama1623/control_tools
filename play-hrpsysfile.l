@@ -14,37 +14,23 @@
 ;; (load "~/prog/hrp2/plugins/test-log-parser.l")
 (if (unix:getenv "OLD_HRPSYS") (warning-message 1 "!!!!!!!!!!Using Old hrpsys!!!!!!!!!!~%") (warning-message 3 "Using New hrpsys~%"))
 
+(defmacro create-robot-interface (&optional (robot nil))
+  (unless robot (setq robot (read-from-string (unix:getenv "ROBOT"))))
+  (warning-message 3 "~%loading robot interface file (~a)...~%" robot)
+  (list
+   'progn
+   (list 'require
+         (read-from-string (format nil ":~a-interface" robot))
+         (read-from-string (format nil "\"package://hrpsys_ros_bridge_tutorials/euslisp/~a-interface.l\"" robot)))
+   (list (read-from-string (format nil "~a-init" robot)))
+   (list 'setq '*robot* (read-from-string (format nil "*~a*" robot)))
+   )
+  )
+
 (if (not (unix:getenv "OLD_HRPSYS"))
-  (let ( (robot-name (unix:getenv "ROBOT")) );; new hrpsys
-    (cond
-     ( (equal robot-name "HRP2JSK")
-       (warning-message 3 "loading robot interface file...~%")
-       (require :hrp2jsk-interface    "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsk-interface.l")
-       (warning-message 3 "initializing robot interface...~%")
-       (hrp2jsk-init)    (setq *robot* *hrp2jsk*)    )
-     ( (equal robot-name "HRP2JSKNT")
-       (warning-message 3 "loading robot interface file...~%")
-       (require :hrp2jsknt-interface  "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsknt-interface.l")
-       (warning-message 3 "initializing robot interface...~%")
-       (hrp2jsknt-init)  (setq *robot* *hrp2jsknt*)  )
-     ( (equal robot-name "HRP2JSKNTS")
-       (warning-message 3 "loading robot interface file...~%")
-       (require :hrp2jsknts-interface "package://hrpsys_ros_bridge_tutorials/euslisp/hrp2jsknts-interface.l")
-       (warning-message 3 "initializing robot interface...~%")
-       (hrp2jsknts-init) (setq *robot* *hrp2jsknts*) )
-     ( (equal robot-name "JAXON")
-       (warning-message 3 "loading robot interface file...~%")
-       (require :jaxon-interface "package://hrpsys_ros_bridge_tutorials/euslisp/jaxon-interface.l")
-       (warning-message 3 "initializing robot interface...~%")
-       (jaxon-init) (setq *robot* *jaxon*) )
-     ( (equal robot-name "JAXON_RED")
-       (warning-message 3 "loading robot interface file...~%")
-       (require :jaxon_red-interface "package://hrpsys_ros_bridge_tutorials/euslisp/jaxon_red-interface.l")
-       (warning-message 3 "initializing robot interface...~%")
-       (jaxon_red-init) (setq *robot* *jaxon_red*) )
-     ( t (warning-message 1 "!!!!!!!!!!No ROBOT TYPE!!!!!!!!!!~%") )
-     )
-    )
+    (if (equal (unix:getenv "ROBOT") "");; new hrpsys
+        (warning-message 1 "!!!!!!!!!!No ROBOT TYPE!!!!!!!!!!~%")
+      (create-robot-interface))
   (when (not (boundp '*hrp2*)) (setup-model-for-hrp2) (setq *robot* *hrp2*)  );; old hrpsys
   )
 
