@@ -356,7 +356,7 @@
     ))
 
 ;; *log* *rs-list* の作成, fname-with-pathのparse
-(defun prepare-plot ( &key (create nil) (fname nil) (robot *robot-class*) (rs-list))
+(defun prepare-plot ( &key (create nil) (fname nil) (robot (class *robot*)) (rs-list))
   (let* ( (fname-with-path (parse-fname-with-path fname))
           (fname (parse-fname fname))
           (rs-fname (concatenate string (reg-replace "[A-z,0-9,_,-]*$" "" fname-with-path) "rs-list.l")))
