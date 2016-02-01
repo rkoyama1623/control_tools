@@ -182,7 +182,7 @@
     (if fname
         (progn 
           (case (probe-file fname)
-            (:file (setq fname-with-path (car (reg-split "." fname))) )                       ;; fnameにログファイル名を指定した場合
+            (:file (setq fname-with-path (car (reg-split "\\." fname))) )                       ;; fnameにログファイル名を指定した場合
             (:directory (setq fname-with-path (concatenate string fname "/" (car (last (reg-split "/" fname)))) )) ;; fnameにログディレクトリ名を指定した場合
             (nil (setq fname-with-path 
                        (concatenate string (unix:getenv "HOME") "/Copy/Documents/log/" (send *robot* :name) "/" fname "/" (car (last (reg-split "/" fname))))) )
