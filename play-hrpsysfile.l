@@ -30,7 +30,7 @@
 (if (not (unix:getenv "OLD_HRPSYS"))
     (if (equal (unix:getenv "ROBOT") "");; new hrpsys
         (warning-message 1 "!!!!!!!!!!No ROBOT TYPE!!!!!!!!!!~%")
-      (create-robot-interface))
+      (unless (boundp '*robot*) (create-robot-interface)))
   (when (not (boundp '*hrp2*)) (setup-model-for-hrp2) (setq *robot* *hrp2*)  );; old hrpsys
   )
 

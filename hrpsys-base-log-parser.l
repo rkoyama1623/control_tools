@@ -14,7 +14,7 @@
 
 (if (equal (unix:getenv "ROBOT") "")
     (warning-message 1 "!!!!!!!!!!No ROBOT TYPE!!!!!!!!!!~%")
-    (create-robot-instance))
+    (unless (boundp '*robot*) (create-robot-instance)))
 
 ;; disable needless module loading
 (unless (assoc :hrp2jsk-interface     *modules*) (nconc *modules* (list (list* :hrp2jsk-interface     nil))))
