@@ -328,7 +328,7 @@
 
     ))
 
-(defun reset-pose ()
+(defun reset-pose (&key (tm 10) (zmp #f(0 0 0)))
   (let* ( (fname-with-path "/tmp/reset-pose")
           ;; (waist-coord)
           (posfile      (format nil "~a.pos"          fname-with-path)) pf
@@ -355,7 +355,7 @@
      (format zf "0 ")
      (mapc #'(lambda (val)
                (format zf "~s " (/ val 1000)))
-           (coerce (send waist-coord :inverse-transform-vector #f(0 0 0)) cons))
+           (coerce (send waist-coord :inverse-transform-vector zmp) cons))
      )
 
     ;; posfile作成  
@@ -380,7 +380,7 @@
 
     (exec-copy "/tmp/" "reset-pose")
 
-    (send *ri* :load-pattern "/tmp/reset-pose")
+    (send *ri* :load-pattern "/tmp/reset-pose" tm)
 
     ))
 
