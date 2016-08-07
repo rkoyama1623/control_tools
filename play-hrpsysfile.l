@@ -345,8 +345,8 @@
     (with-open-file
      (waf waistfile :direction :output)
      (format waf "0 ")
-     (mapc #'(lambda (val) (format waf "~f " (/ val 1000))) (coerce (send waist-coord :worldpos) cons))
-     (mapc #'(lambda (val) (format waf "~f " val)) (car (send waist-coord :rpy-angle)))
+     (mapc #'(lambda (val) (format waf "~s " (/ val 1000))) (coerce (send waist-coord :worldpos) cons))
+     (mapc #'(lambda (val) (format waf "~s " val)) (car (send waist-coord :rpy-angle)))
      )
     
     ;; zmpファイル作成
@@ -354,7 +354,7 @@
      (zf zmpfile :direction :output)
      (format zf "0 ")
      (mapc #'(lambda (val)
-               (format zf "~f " (/ val 1000)))
+               (format zf "~s " (/ val 1000)))
            (coerce (send waist-coord :inverse-transform-vector #f(0 0 0)) cons))
      )
 
@@ -362,14 +362,14 @@
     (with-open-file
      (pf posfile :direction :output)
      (format pf "0 ")
-     (mapc #'(lambda (angle) (format pf "~f " (deg2rad angle))) (coerce (send *robot* :reset-pose) cons))
+     (mapc #'(lambda (angle) (format pf "~s " (deg2rad angle))) (coerce (send *robot* :reset-pose) cons))
      (format pf "~%")
      )
 
     ;; wrenchfile作成
     (with-open-file
      (wf wrenchfile :direction :output)
-     (format wf "0  0 0 ~f 0 0 0  0 0 ~f 0 0 0  0 0 0 0 0 0  0 0 0 0 0 0~%" (* 9.8 1e-3 (* 0.5 (send *robot* :weight))) (* 9.8 1e-3 (* 0.5 (send *robot* :weight))))
+     (format wf "0  0 0 ~s 0 0 0  0 0 ~s 0 0 0  0 0 0 0 0 0  0 0 0 0 0 0~%" (* 9.8 1e-3 (* 0.5 (send *robot* :weight))) (* 9.8 1e-3 (* 0.5 (send *robot* :weight))))
      )
 
     ;; optionalfile作成
