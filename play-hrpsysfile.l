@@ -328,8 +328,9 @@
 
     ))
 
-(defun reset-pose (&key (tm 10) (zmp #f(0 0 0)))
-  (let* ( (fname-with-path "/tmp/reset-pose")
+(defun set-current-pose (&key (tm 10) (zmp-offset #f(0 0 0)))
+  (let* ( (zmp)
+          (fname-with-path "/tmp/set-current-pose")
           ;; (waist-coord)
           (posfile      (format nil "~a.pos"          fname-with-path)) pf
           (waistfile    (format nil "~a.waist"        fname-with-path)) waf
@@ -340,6 +341,9 @@
     (send *robot* :fix-leg-to-coords (make-coords))
     (setq waist-coord (reduce #'(lambda (coord0 coord1) (make-coords :pos (scale 0.5 (v+ (send coord0 :worldpos) (send coord1 :worldpos)))))
                              (send-all (send-all (send *robot* :legs :crotch-r) :child-link) :worldcoords)))
+
+    (setq zmp (send *robot* :centroid))
+    (setf (elt zmp 2) 0)
 
     ;; waistファイル作成
     (with-open-file
@@ -355,14 +359,14 @@
      (format zf "0 ")
      (mapc #'(lambda (val)
                (format zf "~s " (/ val 1000)))
-           (coerce (send waist-coord :inverse-transform-vector zmp) cons))
+           (coerce (send waist-coord :inverse-transform-vector (v+ zmp zmp-offset)) cons))
      )
 
     ;; posfile作成  
     (with-open-file
      (pf posfile :direction :output)
      (format pf "0 ")
-     (mapc #'(lambda (angle) (format pf "~s " (deg2rad angle))) (coerce (send *robot* :reset-pose) cons))
+     (mapc #'(lambda (angle) (format pf "~s " (deg2rad angle))) (coerce (send *robot* :angle-vector) cons))
      (format pf "~%")
      )
 
@@ -378,11 +382,15 @@
      (format of "0.0 1 1 0 0 5 5 5 5~%")
      )
 
-    (exec-copy "/tmp/" "reset-pose")
+    (exec-copy "/tmp/" "set-current-pose")
 
-    (send *ri* :load-pattern "/tmp/reset-pose" tm)
+    (send *ri* :load-pattern "/tmp/set-current-pose" tm)
 
     ))
+
+(defun reset-pose (&key (tm 10) (zmp-offset #f(0 0 0)))
+  (send *robot* :reset-pose)
+  (set-current-pose :tm tm :zmp-offset zmp-offset))
 
 (defun set-gain ( &optional (gain-ratio 1.0) )
   (setq vec (fill (instantiate float-vector (send *hrp2* :dof)) 1.0))
