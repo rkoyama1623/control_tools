@@ -390,6 +390,8 @@
 
 (defun reset-pose (&rest args &key &allow-other-keys)
   (send *robot* :reset-pose)
+  ;; (send *robot* :move-centroid-on-foot :both '(:lleg :rleg))
+  (send *robot* :legs :move-end-pos #f(-70 0 0))
   (apply #'set-current-pose args))
 
 (defun set-gain ( &optional (gain-ratio 1.0) )
