@@ -83,11 +83,17 @@
       ;; hrpsysシミュレータ用 localの/tmpにコピー
       (unix::system (concatenate string "cp " path fname ".* /tmp/" ) )
     ;; 実機
-    (cond ( (equal (send *robot* :name) "HRP2JSK")    (unix::system (concatenate string "scp " path fname ".* grxuser@hrp2007c:/tmp") ) )
-          ( (equal (send *robot* :name) "HRP2JSKNT")  (unix::system (concatenate string "scp " path fname ".* grxuser@hrp2016c:/tmp") ) )
-          ( (equal (send *robot* :name) "HRP2JSKNTS") (unix::system (concatenate string "scp " path fname ".* grxuser@hrp2017c:/tmp") ) )
-          ( t (warning-message 1 "No Setting for The Robot~%") )
-          )
+    (progn
+      (cond
+       ( (equal (send *robot* :name) "HRP2JSK")    (setq uname "grxuser" machine-name "hrp2007c") )
+       ( (equal (send *robot* :name) "HRP2JSKNT")  (setq uname "grxuser" machine-name "hrp2016c") )
+       ( (equal (send *robot* :name) "HRP2JSKNTS") (setq uname "grxuser" machine-name "hrp2017c") )
+       ( (equal (send *robot* :name) "JAXON")      (setq uname "leus"    machine-name "jaxon")    )
+       ( (equal (send *robot* :name) "JAXON_RED")  (setq uname "leus"    machine-name "jaxonred") )
+       ( t (warning-message 1 "No Setting for The Robot~%") )
+       )
+      (unix:system (concatenate string "scp " path fname ".* " uname "@" machine-name ":/tmp"))
+      )
     )
   )
 
