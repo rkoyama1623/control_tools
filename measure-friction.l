@@ -12,7 +12,7 @@
 
     (send *ri* :angle-vector (send *robot* :angle-vector) tm)
     (send *ri* :wait-interpolation)
-    (send *ri* :angle-vector init-pose tm)
+    (send *ri* :angle-vector (send *robot* :angle-vector init-pose) tm)
     (send *ri* :wait-interpolation)
 
     (save-log :fname (format nil "move-foot_~s,~s,~svec_~syaw_~stm" (elt translate-vec 0) (elt translate-vec 1) (elt translate-vec 2) yaw-angle tm))
