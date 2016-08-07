@@ -388,9 +388,9 @@
 
     ))
 
-(defun reset-pose (&key (tm 10) (zmp-offset #f(0 0 0)))
+(defun reset-pose (&rest args &key &allow-other-keys)
   (send *robot* :reset-pose)
-  (set-current-pose :tm tm :zmp-offset zmp-offset))
+  (apply #'set-current-pose args))
 
 (defun set-gain ( &optional (gain-ratio 1.0) )
   (setq vec (fill (instantiate float-vector (send *hrp2* :dof)) 1.0))
