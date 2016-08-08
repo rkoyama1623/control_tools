@@ -101,7 +101,7 @@
 
     (setq sim-flg (ros::get-param "use_sim_time" nil));; シミュレーションフラグ
     
-    (setq fname (read (piped-fork (format nil "zenity --entry --title \"ファイル名\" --text=\"ログファイルの保存名\" --entry-text=\"~s\"" fname))))
+    (setq fname (read-line (piped-fork (format nil "zenity --entry --title \"ファイル名\" --text=\"ログファイルの保存名\" --entry-text=\"~s\"" fname))))
     (setq fname (format nil "~a_~a_~a" fname (send *robot* :name) date))
 
 		;; コピー先設定
