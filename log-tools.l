@@ -377,5 +377,6 @@
      )
 
     (if rs-list (setq 'rs-list (copy-object *rs-list*)))
+    (unless (and (boundp '*viewer*) *viewer*) (objects *robot*))
     fname-with-path
     ))
