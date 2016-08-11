@@ -1,5 +1,8 @@
 (defmacro create-robot-instance (&optional (robot nil))
-  (unless robot (setq robot (read-from-string (unix:getenv "ROBOT"))))
+  (unless robot
+    (if (unix:getenv "ROBOT")
+        (setq robot (read-from-string (unix:getenv "ROBOT")))
+      (setq robot (read-from-string (ros::get-param "robot/type")))))
   (warning-message 3 "~%loading robot interface file (~a)...~%" robot)
   (list
    'progn
